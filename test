@@ -1,0 +1,56 @@
+// ==UserScript==
+// @name         Codechef IO Copy
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  try to take over the world!
+// @author       nikhilksingh97
+// @match        https://www.codechef.com/problems/*
+// @grant        none
+// ==/UserScript==
+
+
+let styleSheet = `
+.copyBtn {
+    background-color: green;
+    padding: 5px;
+    font-size: 12px;
+}
+`;
+
+let s = document.createElement('style');
+s.type = "text/css";
+s.innerHTML = styleSheet;
+(document.head || document.documentElement).appendChild(s);
+
+window.addEventListener('load', function() {
+    'use strict';
+
+    function copy(ele) {
+        let temp = document.createElement('textarea');
+        document.body.appendChild(temp);
+        temp.value = ele.textContent;
+        temp.select();
+        document.execCommand('copy');
+        temp.remove();
+    }
+
+    function addCopyBtn(ele) {
+        let btn = document.createElement("button");
+        btn.innerHTML = "Copy";
+        btn.className = "copyBtn";
+        btn.onclick = () => {
+            copy(ele.lastChild);
+        }
+
+        ele.insertBefore(document.createElement('br'), ele.childNodes[0]);
+        ele.insertBefore(btn, ele.childNodes[0]);
+    }
+
+    let preTags = document.getElementsByTagName("pre");
+
+    console.log(preTags);
+
+    for (let preTag of preTags) {
+        addCopyBtn(preTag);
+    }
+});
